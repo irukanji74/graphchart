@@ -93,22 +93,20 @@ public class MatchParser {
 	private Result functionVariable(String s) throws Exception {
 		String f = "";
 		int i = 0;
-		// ищем название функции или переменной
-		// имя обязательно должно начинаться с буквы
+		// РёС‰РµРј РЅР°Р·РІР°РЅРёРµ С„СѓРЅРєС†РёРё РёР»Рё РїРµСЂРµРјРµРЅРЅРѕР№
+		// РёРјСЏ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РЅРѕ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ Р±СѓРєРІС‹
 		while (i < s.length()
 				&& (Character.isLetter(s.charAt(i)) 
 			    || (Character.isDigit(s.charAt(i)) && i > 0))) {
 			f += s.charAt(i);
 			i++;
 		}
-		if (!f.isEmpty()) { // если что-нибудь нашли
-			if (i < s.length() && s.charAt(i) == '(') { // и следующий символ
-														// скобка значит - это
-														// функция
+		if (!f.isEmpty()) { // РµСЃР»Рё С‡С‚Рѕ-РЅРёР±СѓРґСЊ РЅР°С€Р»Рё
+			if (i < s.length() && s.charAt(i) == '(') { //Рё СЃР»РµРґСѓСЋС‰РёР№ СЃРёРјРІРѕР» СЃРєРѕР±РєР° Р·РЅР°С‡РёС‚ - СЌС‚Рѕ С„СѓРЅРєС†РёСЏ
 				Result r = parenthesis(s.substring(f.length()));
 				return processFunction(f, r);
-				// иначе - это переменная
-			} //else if(){ }
+			// РёРЅР°С‡Рµ - СЌС‚Рѕ РїРµСЂРµРјРµРЅРЅР°СЏ
+			} 
 			else{
 				return new Result(getVariable(f), s.substring(f.length()));
 			}
@@ -120,20 +118,20 @@ public class MatchParser {
 		int i = 0;
 		int dot_cnt = 0;
 		boolean negative = false;
-		// число также может начинаться с минуса
+	// С‡РёСЃР»Рѕ С‚Р°РєР¶Рµ РјРѕР¶РµС‚ РЅР°С‡РёРЅР°С‚СЊСЃСЏ СЃ РјРёРЅСѓСЃР°
 		if (s.charAt(0) == '-') {
 			negative = true;
 			s = s.substring(1);
 		}
-		// разрешаем только цифры и точку
+		// СЂР°Р·СЂРµС€Р°РµРј С‚РѕР»СЊРєРѕ С†РёС„СЂС‹ Рё С‚РѕС‡РєСѓ
 		while (i < s.length() && (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.')) {
-			// но также проверям, что в числе может быть только одна точка!
+			// РЅРѕ С‚Р°РєР¶Рµ РїСЂРѕРІРµСЂСЏРј, С‡С‚Рѕ РІ С‡РёСЃР»Рµ РјРѕР¶РµС‚ Р±С‹С‚СЊ С‚РѕР»СЊРєРѕ РѕРґРЅР° С‚РѕС‡РєР°!
 			if (s.charAt(i) == '.' && ++dot_cnt > 1) {
 				throw new Exception("not valid number '" + s.substring(0, i + 1) + "'");
 			}
 			i++;
 		}
-		if (i == 0) { // что-либо похожее на число мы не нашли
+		if (i == 0) { // С‡С‚Рѕ-Р»РёР±Рѕ РїРѕС…РѕР¶РµРµ РЅР° С‡РёСЃР»Рѕ РјС‹ РЅРµ РЅР°С€Р»Рё
 			throw new Exception("can't get valid number in '" + s + "'");
 		}
 
@@ -145,8 +143,7 @@ public class MatchParser {
 		return new Result(dPart, restPart);
 	}
 
-	// Тут определяем все нашие функции, которыми мы можем пользоватся в
-	// формулах
+	// РўСѓС‚ РѕРїСЂРµРґРµР»СЏРµРј РІСЃРµ РЅР°С€РёРµ С„СѓРЅРєС†РёРё, РєРѕС‚РѕСЂС‹РјРё РјС‹ РјРѕР¶РµРј РїРѕР»СЊР·РѕРІР°С‚СЃСЏ РІ С„РѕСЂРјСѓР»Р°С…
 	private Result processFunction(String func, Result r) {
 		if (func.equals("sin")) {
 			return new Result(Math.sin(Math.toRadians(r.acc)), r.rest);
